@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>牠們其實一直都在</title>
+
+<style>
+body {
+  margin: 0;
+  background: #111;
+  color: #fff;
+  font-family: "Noto Serif TC", serif;
+}
+
+/* 直式閱讀 */
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  line-height: 1.8;
+  font-size: 18px;
+}
+
+/* 版面 */
+.container {
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo */
+.logo {
+  width: 120px;
+  margin-bottom: 16px;
+}
+
+/* 劇情區 */
+.scene {
+  display: none;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.scene.active {
+  display: block;
+}
+
+/* 選項 */
+.choices {
+  margin-top: 20px;
+}
+
+button {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 10px 14px;
+  margin: 6px;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #ffd27d;
+}
+
+/* 底部 */
+.footer {
+  margin-top: auto;
+  opacity: 0.6;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- Logo -->
+  <img src="logo.png" class="logo" alt="logo">
+
+  <!-- 開場 -->
+  <div id="scene-start" class="scene active vertical">
+    <p>你只是掃了一個 QR。</p>
+    <p>卻被幾雙眼睛盯上了。</p>
+    <div class="choices">
+      <button onclick="go('scene-choice')">繼續</button>
+    </div>
+  </div>
+
+  <!-- 第一選擇 -->
+  <div id="scene-choice" class="scene vertical">
+    <p>不同方向傳來聲音。</p>
+    <p>你會？</p>
+    <div class="choices">
+      <button onclick="pick('dog')">立刻衝過去</button>
+      <button onclick="pick('cat')">假裝沒聽到但偷看</button>
+      <button onclick="pick('rabbit')">小心翼翼靠近</button>
+      <button onclick="pick('hamster')">低頭看腳邊</button>
+    </div>
+  </div>
+
+  <!-- 中段 -->
+  <div id="scene-middle" class="scene vertical">
+    <p id="petText"></p>
+    <p>牠看著你。</p>
+    <p>你選擇？</p>
+    <div class="choices">
+      <button onclick="end('warm')">認真安慰</button>
+      <button onclick="end('funny')">亂講幹話</button>
+      <button onclick="end('silent')">什麼都不說</button>
+    </div>
+  </div>
+
+  <!-- 結局 -->
+  <div id="scene-end" class="scene vertical">
+    <p id="endText"></p>
+    <div class="choices">
+      <button onclick="restart()">重新開始</button>
+    </div>
+  </div>
+
+  <div class="footer">© Pet QR Story</div>
+</div>
+
+<script>
+let pet = "";
+
+const petLines = {
+  dog: "牠搖著尾巴，明明很緊張，卻努力裝沒事。",
+  cat: "牠別過頭，但尾巴出賣了心情。",
+  rabbit: "牠想逃，又忍不住回頭看你。",
+  hamster: "牠站在原地，用很小的聲音嘆氣。"
+};
+
+const endings = {
+  warm: "牠靠過來了。不是因為你說對了什麼，而是你留下來。",
+  funny: "牠看不懂你在幹嘛，但好像被逗笑了。",
+  silent: "你們什麼都沒說，但那段時間是真的。"
+};
+
+function go(id) {
+  document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function pick(p) {
+  pet = p;
+  document.getElementById("petText").innerText = petLines[p];
+  go("scene-middle");
+}
+
+function end(type) {
+  document.getElementById("endText").innerText = endings[type];
+  go("scene-end");
+}
+
+function restart() {
+  pet = "";
+  go("scene-start");
+}
+</script>
+
+</body>
+</html>
